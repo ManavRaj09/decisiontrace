@@ -1,0 +1,34 @@
+{
+  "rules": [
+    {
+      "id": "no-pii-to-external",
+      "description": "Customer PII must never be sent to recipients outside the company domain",
+      "action": "block",
+      "when": {"step_type": "tool_call", "name": ["send_email", "post_webhook"], "pii": true, "recipient_not_in_domains": ["examplebank.com"]}
+    },
+    {
+      "id": "no-secrets-in-llm-calls",
+      "description": "API keys and cloud credentials must not be sent to a model",
+      "action": "block",
+      "when": {"step_type": "llm_call", "pii": ["API_KEY", "AWS_KEY"]}
+    },
+    {
+      "id": "large-refund-needs-approval",
+      "description": "Refunds above 500 require human approval",
+      "action": "require_approval",
+      "when": {"step_type": "tool_call", "name": "issue_refund", "field_gt": {"field": "amount", "value": 500}}
+    },
+    {
+      "id": "pii-in-final-output",
+      "description": "Final answer contains card numbers or SSNs",
+      "action": "flag",
+      "when": {"step_type": "output", "pii": ["CREDIT_CARD", "SSN"]}
+    },
+    {
+      "id": "prompt-injection-in-retrieval",
+      "description": "Retrieved content contains instruction-override text (possible indirect prompt injection)",
+      "action": "flag",
+      "when": {"step_type": "retrieval", "regex": "(ignore|disregard) (all )?(previous|prior|above) (instructions|rules)"}
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "decisiontrace"
+version = "0.1.0"
+description = "Flight recorder, policy guardrails and red-team testing for enterprise AI agents"
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "MIT" }
+keywords = ["ai", "llm", "agents", "governance", "observability", "guardrails", "compliance"]
+dependencies = []
+
+[project.optional-dependencies]
+yaml = ["PyYAML>=6"]
+
+[project.scripts]
+decisiontrace = "decisiontrace.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+decisiontrace = ["*.json"]
